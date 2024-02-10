@@ -8,13 +8,9 @@ import { IBook } from './interface/book.types';
 export class BookService {
   constructor(@InjectModel('Book') private bookModel: Model<CreateBookDto>) {}
   async create(createBookDto: CreateBookDto): Promise<IBook> {
-    try {
-      const newBook = new this.bookModel(createBookDto);
-      const savedBook = await newBook.save();
-      return savedBook;
-    } catch (error) {
-      throw new Error(`Failed to create book: ${error.message}`);
-    }
+    const newBook = new this.bookModel(createBookDto);
+    const savedBook = await newBook.save();
+    return savedBook;
   }
   // findAll() {
   //   return `This action returns all books`;
