@@ -3,6 +3,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IBook } from './interface/book.types';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BookService {
@@ -19,13 +20,15 @@ export class BookService {
   }
 
   async findOne(id: string) {
-    const books = this.bookModel.findById(id);
+    const books = await this.bookModel.findById(id);
     return books;
   }
 
-  // update(id: number, updateBookDto: UpdateBookDto) {
-  //   return `This action updates a #${id} book`;
-  // }
+  async update(id: string, updateBookDto: UpdateBookDto): Promise<string> {
+    await this.bookModel.findByIdAndUpdate(id, updateBookDto, { new: true });
+
+    return 'Book patch successful';
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} book`;
