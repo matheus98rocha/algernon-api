@@ -18,7 +18,7 @@ export class BookService {
     return books;
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     const books = this.bookModel.findById(id);
     return books;
   }
