@@ -15,13 +15,13 @@ export class BookService {
 
   async findAll() {
     const books = await this.bookModel.find();
-    console.log(books);
     return books;
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} book`;
-  // }
+  findOne(id: string) {
+    const books = this.bookModel.findById(id);
+    return books;
+  }
 
   // update(id: number, updateBookDto: UpdateBookDto) {
   //   return `This action updates a #${id} book`;
