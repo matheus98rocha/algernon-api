@@ -4,6 +4,7 @@ import {
   Controller,
   HttpException,
   HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -20,15 +21,34 @@ export class BookController {
       return createdBook;
     } catch (error) {
       throw new HttpException(
-        'Failed to create book',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Failed to create the books',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
       );
     }
   }
-  // @Get()
-  // findAll() {
-  //   return this.booksService.findAll();
-  // }
+  @Get()
+  async findAll() {
+    try {
+      await this.booksService.findAll();
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'Failed to get the books',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

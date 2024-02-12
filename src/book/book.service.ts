@@ -12,9 +12,12 @@ export class BookService {
     const savedBook = await newBook.save();
     return savedBook;
   }
-  // findAll() {
-  //   return `This action returns all books`;
-  // }
+
+  async findAll() {
+    const books = await this.bookModel.find();
+    console.log(books);
+    return books;
+  }
 
   // findOne(id: number) {
   //   return `This action returns a #${id} book`;
