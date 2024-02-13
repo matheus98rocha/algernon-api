@@ -21,6 +21,7 @@ export class BookController {
   @Post()
   async create(@Body() bookData: CreateBookDto): Promise<IBook> {
     try {
+      console.log('Passei aqui');
       const createdBook = await this.booksService.create(bookData);
       return createdBook;
     } catch (error) {
@@ -28,6 +29,7 @@ export class BookController {
         {
           status: HttpStatus.FORBIDDEN,
           error: 'Failed to create the books',
+          message: error.message,
         },
         HttpStatus.FORBIDDEN,
         {
@@ -63,6 +65,7 @@ export class BookController {
         {
           status: HttpStatus.FORBIDDEN,
           error: 'Failed to get by id the books',
+          message: error.message,
         },
         HttpStatus.FORBIDDEN,
         {
@@ -81,6 +84,7 @@ export class BookController {
         {
           status: HttpStatus.FORBIDDEN,
           error: 'Failed to get by id the books',
+          message: error.message,
         },
         HttpStatus.FORBIDDEN,
         {
@@ -99,6 +103,7 @@ export class BookController {
         {
           status: HttpStatus.FORBIDDEN,
           error: 'Failed to delete the books',
+          message: error.message,
         },
         HttpStatus.FORBIDDEN,
         {

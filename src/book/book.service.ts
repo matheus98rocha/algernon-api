@@ -9,9 +9,8 @@ import { UpdateBookDto } from './dto/update-book.dto';
 export class BookService {
   constructor(@InjectModel('Book') private bookModel: Model<CreateBookDto>) {}
   async create(createBookDto: CreateBookDto): Promise<IBook> {
-    const newBook = new this.bookModel(createBookDto);
-    const savedBook = await newBook.save();
-    return savedBook;
+    const newBook = this.bookModel.create(createBookDto);
+    return newBook;
   }
 
   async findAll() {
