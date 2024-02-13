@@ -30,7 +30,9 @@ export class BookService {
     return 'Book patch successful';
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} book`;
-  // }
+  async remove(id: string) {
+    await this.bookModel.findByIdAndDelete(id);
+
+    return 'Book deleted successful';
+  }
 }
