@@ -7,6 +7,6 @@ export const UserSchema = new mongoose.Schema({
     index: { unique: true, dropDups: true },
   },
   hash: { type: String, required: true },
-  hashedRt: { type: Date, required: false },
+  hashedRefreshToken: { type: String, required: false },
   created_at: { type: Date, required: true, default: Date.now },
 });

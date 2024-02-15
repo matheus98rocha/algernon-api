@@ -3,19 +3,32 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthDto } from './dto/user.dto';
 import { hashData } from './utils/hash-data';
-import { Tokens } from './interfaces/auth.type';
+import { ITokens } from './interfaces/auth.type';
+import { TokenHelpers } from './helpers/token.helper';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel('Auth') private authModel: Model<AuthDto>) {}
-  async signupLocal(authDto: AuthDto): Promise<Tokens> {
+  constructor(
+    @InjectModel('Auth') private authModel: Model<AuthDto>,
+    private tokenHelpers: TokenHelpers,
+  ) {}
+
+  async signupLocal(authDto: AuthDto): Promise<ITokens> {
     const hash = await hashData(authDto.password);
-    const newUser = this.authModel.create({
+
+    const newUser = await this.authModel.create({
       email: authDto.email,
       hash,
     });
-    return newUser;
+
+    const tokens = await this.tokenHelpers.getTokens(newUser.id, newUser.email);
+    await this.tokenHelpers.updateRefreshToken(
+      newUser.id,
+      tokens.refresh_token,
+    );
+    return tokens;
   }
+
   async signinLocal() {
     return 'This is working';
   }
