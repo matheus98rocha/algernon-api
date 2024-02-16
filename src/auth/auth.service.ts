@@ -49,8 +49,11 @@ export class AuthService {
 
     return tokens;
   }
-  async logout() {
-    return 'This is working';
+  async logout(userId: string) {
+    await this.authModel.findOneAndUpdate(
+      { id: userId, hash: { $ne: null } },
+      { hashedRefreshToken: null },
+    );
   }
   async refresh() {
     return 'This is working';

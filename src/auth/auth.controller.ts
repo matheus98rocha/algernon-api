@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/user.dto';
 import { ITokens } from './interfaces/auth.type';
@@ -7,6 +7,7 @@ import { ITokens } from './interfaces/auth.type';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('local/signup')
+  @HttpCode(HttpStatus.CREATED)
   signupLocal(@Body() authDto: AuthDto): Promise<ITokens> {
     try {
       return this.authService.signupLocal(authDto);
@@ -16,6 +17,7 @@ export class AuthController {
   }
 
   @Post('local/signin')
+  @HttpCode(HttpStatus.OK)
   signinLocal(@Body() dto: AuthDto): Promise<ITokens> {
     try {
       return this.authService.signinLocal(dto);
@@ -25,11 +27,13 @@ export class AuthController {
   }
 
   @Post('logout')
-  logout() {
-    return this.authService.logout();
+  @HttpCode(HttpStatus.OK)
+  logout(@Body() userId: string) {
+    return this.authService.logout(userId);
   }
 
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   refresh() {
     return this.authService.refresh();
   }
