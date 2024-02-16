@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthDto } from './dto/user.dto';
 import { hashData } from './utils/hash-data';
 import { ITokens } from './interfaces/auth.type';
 import { TokenHelpers } from './helpers/token.helper';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -14,23 +16,38 @@ export class AuthService {
   ) {}
 
   async signupLocal(authDto: AuthDto): Promise<ITokens> {
-    const hash = await hashData(authDto.password);
+    const { password, email } = authDto;
+    const hash = await hashData(password);
 
-    const newUser = await this.authModel.create({
-      email: authDto.email,
-      hash,
-    });
+    const newUser = await this.authModel.create({ email, hash });
+    const { id, email: userEmail } = newUser;
 
-    const tokens = await this.tokenHelpers.getTokens(newUser.id, newUser.email);
-    await this.tokenHelpers.updateRefreshToken(
-      newUser.id,
-      tokens.refresh_token,
-    );
+    const tokens = await this.tokenHelpers.getTokens(id, userEmail);
+    await this.tokenHelpers.updateRefreshToken(id, tokens.refresh_token);
     return tokens;
   }
 
-  async signinLocal() {
-    return 'This is working';
+  async signinLocal(dto: AuthDto): Promise<ITokens> {
+    const currentUser = await this.authModel.findOne({ email: dto.email });
+
+    if (
+      !currentUser ||
+      !(await bcrypt.compare(dto.password, currentUser.hash))
+    ) {
+      throw new ForbiddenException('Invalid credentials');
+    }
+
+    const tokens = await this.tokenHelpers.getTokens(
+      currentUser.id,
+      currentUser.email,
+    );
+
+    await this.tokenHelpers.updateRefreshToken(
+      currentUser.id,
+      tokens.refresh_token,
+    );
+
+    return tokens;
   }
   async logout() {
     return 'This is working';

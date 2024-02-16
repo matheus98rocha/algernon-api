@@ -6,26 +6,30 @@ import { ITokens } from './interfaces/auth.type';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-  @Post('/local/signup')
+  @Post('local/signup')
   signupLocal(@Body() authDto: AuthDto): Promise<ITokens> {
     try {
       return this.authService.signupLocal(authDto);
     } catch (error) {
-      return error;
+      console.error(error);
     }
   }
 
-  @Post('/local/signin')
-  signinLocal() {
-    return this.authService.signinLocal();
+  @Post('local/signin')
+  signinLocal(@Body() dto: AuthDto): Promise<ITokens> {
+    try {
+      return this.authService.signinLocal(dto);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  @Post('/logout')
+  @Post('logout')
   logout() {
     return this.authService.logout();
   }
 
-  @Post('/refresh')
+  @Post('refresh')
   refresh() {
     return this.authService.refresh();
   }
