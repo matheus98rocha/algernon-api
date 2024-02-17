@@ -41,20 +41,24 @@ export class AuthService {
       currentUser.id,
       currentUser.email,
     );
-
     await this.tokenHelpers.updateRefreshToken(
       currentUser.id,
       tokens.refresh_token,
     );
-
     return tokens;
   }
   async logout(userId: string) {
-    await this.authModel.findOneAndUpdate(
-      { id: userId, hash: { $ne: null } },
-      { hashedRefreshToken: null },
-    );
+    try {
+      await this.authModel.findOneAndUpdate(
+        { _id: userId },
+        { hashedRefreshToken: null },
+        { new: true }, // Adicione essa opção se desejar retornar o documento atualizado
+      );
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
   }
+
   async refresh() {
     return 'This is working';
   }

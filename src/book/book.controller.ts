@@ -21,7 +21,6 @@ export class BookController {
   @Post()
   async create(@Body() bookData: CreateBookDto): Promise<IBook> {
     try {
-      console.log('Passei aqui');
       const createdBook = await this.booksService.create(bookData);
       return createdBook;
     } catch (error) {

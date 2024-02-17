@@ -20,7 +20,7 @@ export class TokenHelpers {
         },
         {
           secret: process.env.ACCESSS_TOKEN_SECRET,
-          expiresIn: 60 * 15,
+          expiresIn: '15m',
         },
       ),
       this.jwtService.signAsync(
@@ -30,7 +30,7 @@ export class TokenHelpers {
         },
         {
           secret: process.env.REFRESH_TOKEN_SECRET,
-          expiresIn: 60 * 60 * 24 * 7,
+          expiresIn: '7d',
         },
       ),
     ]);
