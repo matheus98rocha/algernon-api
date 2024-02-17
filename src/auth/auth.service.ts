@@ -49,6 +49,7 @@ export class AuthService {
   }
   async logout(userId: string) {
     try {
+      console.log(userId);
       await this.authModel.findOneAndUpdate(
         { _id: userId },
         { hashedRefreshToken: null },
