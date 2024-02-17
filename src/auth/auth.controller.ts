@@ -39,15 +39,16 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Req() req: AuthenticationRequest) {
-    const user = req;
-    console.log(user);
-    return this.authService.logout(user.user.sub);
+    const user = req.user.sub;
+    return this.authService.logout(user);
   }
 
-  // @UseGuards(AuthGuard('jwt-refresh'))
-  // @Post('refresh')
-  // @HttpCode(HttpStatus.OK)
-  // refresh() {
-  //   return this.authService.refresh();
-  // }
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  refresh(@Req() req: AuthenticationRequest) {
+    const { sub, refreshToken } = req.user;
+
+    return this.authService.refresh(sub, refreshToken);
+  }
 }

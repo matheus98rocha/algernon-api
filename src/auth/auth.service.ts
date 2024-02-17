@@ -49,7 +49,6 @@ export class AuthService {
   }
   async logout(userId: string) {
     try {
-      console.log(userId);
       await this.authModel.findOneAndUpdate(
         { _id: userId },
         { hashedRefreshToken: null },
@@ -60,7 +59,19 @@ export class AuthService {
     }
   }
 
-  async refresh() {
-    return 'This is working';
+  async refresh(userId: string, refreshToken: string) {
+    const user = await this.authModel.findOne({ _id: userId });
+
+    if (!user) throw new ForbiddenException('Acess denied');
+
+    const refeshTokenMatch = await bcrypt.compare(
+      refreshToken,
+      user.hashedRefreshToken,
+    );
+    if (!refeshTokenMatch) throw new ForbiddenException('Acess denied');
+
+    const tokens = await this.tokenHelpers.getTokens(user.id, user.email);
+    await this.tokenHelpers.updateRefreshToken(user.id, tokens.refresh_token);
+    return tokens;
   }
 }

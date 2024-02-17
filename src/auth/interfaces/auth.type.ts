@@ -9,5 +9,6 @@ export interface AuthenticationRequest extends Request {
   user: {
     sub: string;
     email: string;
-  }; // define your type
+    refreshToken: string;
+  };
 }

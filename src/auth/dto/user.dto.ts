@@ -3,4 +3,5 @@ export interface AuthDto {
   email: string;
   password: string;
   hash: string;
+  hashedRefreshToken: string;
 }
