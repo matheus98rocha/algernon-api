@@ -19,6 +19,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   signupLocal(@Body() authDto: AuthDto): Promise<ITokens> {
     try {
+      console.log(authDto);
       return this.authService.signupLocal(authDto);
     } catch (error) {
       console.error(error);

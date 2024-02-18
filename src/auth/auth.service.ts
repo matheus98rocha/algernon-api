@@ -16,10 +16,10 @@ export class AuthService {
   ) {}
 
   async signupLocal(authDto: AuthDto): Promise<ITokens> {
-    const { password, email } = authDto;
+    const { password, email, name } = authDto;
     const hash = await hashData(password);
 
-    const newUser = await this.authModel.create({ email, hash });
+    const newUser = await this.authModel.create({ email, hash, name });
     const { id, email: userEmail } = newUser;
 
     const tokens = await this.tokenHelpers.getTokens(id, userEmail);
