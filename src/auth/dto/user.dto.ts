@@ -1,5 +1,3 @@
-import { IBook } from 'src/book/interface/book.types';
-
 export interface AuthDto {
   id: string;
   name: string;

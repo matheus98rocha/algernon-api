@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import { EnumStatusBook } from '../interface/book.types';
+import { Schema as MongooseSchema } from 'mongoose';
 
 export const BookSchema = new mongoose.Schema({
   title: {
@@ -12,4 +13,5 @@ export const BookSchema = new mongoose.Schema({
   startedDate: { type: Date, required: false },
   endDate: { type: Date, required: false },
   created_at: { type: Date, required: true, default: Date.now },
+  user: { type: MongooseSchema.Types.ObjectId, ref: 'Person' },
 });

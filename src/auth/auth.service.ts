@@ -61,7 +61,6 @@ export class AuthService {
 
   async refresh(userId: string, refreshToken: string) {
     const user = await this.authModel.findOne({ _id: userId });
-
     if (!user) throw new ForbiddenException('Acess denied');
 
     const refeshTokenMatch = await bcrypt.compare(
