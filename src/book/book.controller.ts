@@ -2,8 +2,6 @@ import {
   Post,
   Body,
   Controller,
-  HttpException,
-  HttpStatus,
   Get,
   Param,
   Patch,
@@ -20,95 +18,27 @@ export class BookController {
 
   @Post()
   async create(@Body() bookData: CreateBookDto): Promise<IBook> {
-    try {
-      const createdBook = await this.booksService.create(bookData);
-      return createdBook;
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Failed to create the books',
-          message: error.message,
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
+    const createdBook = await this.booksService.create(bookData);
+    return createdBook;
   }
+
   @Get()
   async findAll() {
-    try {
-      return await this.booksService.findAll();
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Failed to get the books',
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
+    return await this.booksService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      return await this.booksService.findOne(id);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Failed to get by id the books',
-          message: error.message,
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
+    return await this.booksService.findOne(id);
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    try {
-      return await this.booksService.update(id, updateBookDto);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Failed to get by id the books',
-          message: error.message,
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
+    return await this.booksService.update(id, updateBookDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    try {
-      return await this.booksService.remove(id);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.FORBIDDEN,
-          error: 'Failed to delete the books',
-          message: error.message,
-        },
-        HttpStatus.FORBIDDEN,
-        {
-          cause: error,
-        },
-      );
-    }
+    return await this.booksService.remove(id);
   }
 }

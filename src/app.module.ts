@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { BookModule } from './book/book.module';
 import { AuthModule } from './auth/auth.module';
-import { AccessTokenGuard } from './auth/common/gaurds';
+import { AccessTokenGuard } from './common/gaurds';
 
 @Module({
   imports: [

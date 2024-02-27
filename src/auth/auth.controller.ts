@@ -9,10 +9,12 @@ import {
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/user.dto';
 import { ITokens } from './interfaces/auth.type';
-import { Public } from './common/decorators/public.decorator';
-import { GetCurrentUser, GetCurrentUserId } from './common/decorators';
-import { RefreshTokenGuard } from './common/gaurds';
-
+import {
+  GetCurrentUser,
+  GetCurrentUserId,
+  Public,
+} from 'src/common/decorators';
+import { RefreshTokenGuard } from 'src/common/gaurds';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -20,40 +22,30 @@ export class AuthController {
   @Public()
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
-  signupLocal(@Body() authDto: AuthDto): Promise<ITokens> {
-    try {
-      console.log(authDto);
-      return this.authService.signupLocal(authDto);
-    } catch (error) {
-      console.error(error);
-    }
+  async signupLocal(@Body() authDto: AuthDto): Promise<ITokens> {
+    return await this.authService.signupLocal(authDto);
   }
 
   @Public()
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
-  signinLocal(@Body() dto: AuthDto): Promise<ITokens> {
-    try {
-      return this.authService.signinLocal(dto);
-    } catch (error) {
-      console.error(error);
-    }
+  async signinLocal(@Body() dto: AuthDto): Promise<ITokens> {
+    return this.authService.signinLocal(dto);
   }
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: string) {
-    console.log(userId);
-    return this.authService.logout(userId);
+  async logout(@GetCurrentUserId() userId: string) {
+    return await this.authService.logout(userId);
   }
 
   @Public()
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  refresh(
+  async refresh(
     @GetCurrentUser('refreshToken') refreshToken: string,
     @GetCurrentUser('sub') userId: string,
   ) {
-    return this.authService.refresh(userId, refreshToken);
+    return await this.authService.refresh(userId, refreshToken);
   }
 }
