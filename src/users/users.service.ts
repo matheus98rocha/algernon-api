@@ -1,0 +1,91 @@
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from './dto/create-user.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { handleErrors } from 'src/utils/handleErrors';
+
+@Injectable()
+export class UsersService {
+  constructor(private readonly prismaService: PrismaService) { }
+
+  private readonly userSelect = {
+    id: true,
+    email: true,
+  };
+
+  async createUser(data: CreateUserDto): Promise<Partial<User>> {
+    try {
+      const user = await this.prismaService.user.create({
+        data: {
+          ...data,
+          password: await bcrypt.hash(data.password, 10),
+        },
+        select: this.userSelect,
+      });
+      return user;
+    } catch (error) {
+      handleErrors(error)
+    }
+  }
+
+  async getUsers(): Promise<Partial<User>[]> {
+    const users = await this.prismaService.user.findMany({
+      select: this.userSelect,
+    });
+    return users;
+  }
+
+  async getUserById(userId: number): Promise<Partial<User>> {
+    try {
+      const user = await this.prismaService.user.findFirst({
+        where: { id: userId },
+        select: this.userSelect,
+      });
+      if (!user) {
+        throw new UnprocessableEntityException(`User with id: ${userId} not found`);
+      }
+      return user;
+    } catch (error) {
+      handleErrors(error)
+    }
+  }
+
+  async updateUserById(userId: number, data: UpdateUserDto): Promise<Partial<User>> {
+    try {
+      const user = await this.prismaService.user.update({
+        where: { id: userId },
+        select: this.userSelect,
+        data: {
+          ...data,
+          password: await bcrypt.hash(data.password, 10),
+        }
+      });
+      if (!user) {
+        throw new UnprocessableEntityException(`User with id: ${userId} not found`);
+      }
+      return user;
+    } catch (error) {
+      handleErrors(error)
+    }
+  }
+
+  async deleteUser(userId: number): Promise<string> {
+    try {
+      await this.prismaService.user.delete({
+        where: { id: userId },
+      });
+      return `User with id: ${userId} deleted successfully`;
+    } catch (error) {
+      handleErrors(error)
+    }
+  }
+
+  async getUserForAuth(filter: Prisma.UserWhereUniqueInput) {
+    return await this.prismaService.user.findUnique({
+      where: filter,
+    })
+
+  }
+}
