@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { JwrAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -14,6 +15,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TokenPayload } from '../auth/interfaces/token-payload.interface';
 import { CreateBookDto } from './dto/create-books.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('books')
 export class BooksController {
@@ -35,15 +37,15 @@ export class BooksController {
   }
 
   @UseGuards(JwrAuthGuard)
-  @Get(':id')
+  @Get('by-id/:id')
   findOne(@Param('id') id: string, @CurrentUser() user: TokenPayload) {
     return this.booksService.findOne(+id, user.userId);
   }
 
   @UseGuards(JwrAuthGuard)
-  @Patch(':id')
+  @Patch('by-id/:id')
   update(
-    @Param('id') id: string,
+    @Param('by-id/:id') id: string,
     @Body() updateBookDto: UpdateBookDto,
     @CurrentUser() user: TokenPayload,
   ) {
@@ -52,9 +54,16 @@ export class BooksController {
   }
 
   @UseGuards(JwrAuthGuard)
-  @Delete(':id')
+  @Delete('by-id/:id')
   remove(@Param('id') id: string, @CurrentUser() user: TokenPayload) {
     // TODO: Not working yet
     return this.booksService.remove(+id, user.userId);
+  }
+
+  @UseGuards(JwrAuthGuard)
+  @Get("googleBookApi")
+  async getBookFromGoogle(@Query('name') name: string) {
+    const response = await this.booksService.getBookFromGoogleApi(name);
+    return response; 
   }
 }
