@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable,UnprocessableEntityException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -44,7 +44,7 @@ export class UsersService {
         select: this.userSelect,
       });
       if (!user) {
-        throw new UnprocessableEntityException(`User with id: ${userId} not found`);
+        throw new UnprocessableEntityException(`Usuário com ID: ${userId} não encontrado`);
       }
       return user;
     } catch (error) {
@@ -63,7 +63,7 @@ export class UsersService {
         }
       });
       if (!user) {
-        throw new UnprocessableEntityException(`User with id: ${userId} not found`);
+        throw new UnprocessableEntityException(`Usuário com ID: ${userId} não encontrado`);
       }
       return user;
     } catch (error) {
@@ -76,7 +76,7 @@ export class UsersService {
       await this.prismaService.user.delete({
         where: { id: userId },
       });
-      return `User with id: ${userId} deleted successfully`;
+      return `Usuário com ID: ${userId} deletado com sucesso`;
     } catch (error) {
       handleErrors(error)
     }

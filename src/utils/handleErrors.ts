@@ -2,20 +2,20 @@ import { InternalServerErrorException, NotFoundException, UnauthorizedException,
 
 export function handleErrors(error: any, message?: string) {
 
-  if(error.status === 401) {
-    throw new UnauthorizedException('Email or password incorrect.')
+  if (error.status === 401) {
+    throw new UnauthorizedException('E-mail ou senha incorretos.');
   }
 
   if (error.status === 500) {
-    throw new InternalServerErrorException(`Something went wrong... Try again later`);
+    throw new InternalServerErrorException('Algo deu errado... Tente novamente mais tarde.');
   }
 
   if (error.status === 404) {
-    throw new NotFoundException(`Something went wrong... Try again later`);
+    throw new NotFoundException('Algo deu errado... Tente novamente mais tarde.');
   }
 
   if (error.code === 'P2002') {
-    throw new UnprocessableEntityException('Email already exists.');
+    throw new UnprocessableEntityException('E-mail já existe.');
   }
 
   throw error;
