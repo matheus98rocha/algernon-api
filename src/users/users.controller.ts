@@ -6,7 +6,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwrAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { TokenPayload } from 'src/auth/interfaces/token-payload.interface';
-import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
 
 @Controller('users')
 export class UsersController {
@@ -34,6 +33,7 @@ export class UsersController {
     return this.userService.updateUserById(userId, request);
   }
 
+  // TODO: Error quando tem apenas um usuário cadastrado
   @Delete('by-id/:userID')
   deleteUser(@Param() params: { userID: string }) {
     const userId = parseAndValidateId(params.userID);

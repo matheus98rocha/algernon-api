@@ -1,4 +1,4 @@
-import { Injectable,UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,11 +8,13 @@ import { handleErrors } from 'src/utils/handleErrors';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   private readonly userSelect = {
     id: true,
     email: true,
+    name: true,
+    lastName: true,
   };
 
   async createUser(data: CreateUserDto): Promise<Partial<User>> {
@@ -26,7 +28,7 @@ export class UsersService {
       });
       return user;
     } catch (error) {
-      handleErrors(error)
+      handleErrors(error);
     }
   }
 
@@ -44,15 +46,20 @@ export class UsersService {
         select: this.userSelect,
       });
       if (!user) {
-        throw new UnprocessableEntityException(`Usuário com ID: ${userId} não encontrado`);
+        throw new UnprocessableEntityException(
+          `Usuário com ID: ${userId} não encontrado`,
+        );
       }
       return user;
     } catch (error) {
-      handleErrors(error)
+      handleErrors(error);
     }
   }
 
-  async updateUserById(userId: number, data: UpdateUserDto): Promise<Partial<User>> {
+  async updateUserById(
+    userId: number,
+    data: UpdateUserDto,
+  ): Promise<Partial<User>> {
     try {
       const user = await this.prismaService.user.update({
         where: { id: userId },
@@ -60,14 +67,16 @@ export class UsersService {
         data: {
           ...data,
           password: await bcrypt.hash(data.password, 10),
-        }
+        },
       });
       if (!user) {
-        throw new UnprocessableEntityException(`Usuário com ID: ${userId} não encontrado`);
+        throw new UnprocessableEntityException(
+          `Usuário com ID: ${userId} não encontrado`,
+        );
       }
       return user;
     } catch (error) {
-      handleErrors(error)
+      handleErrors(error);
     }
   }
 
@@ -78,14 +87,13 @@ export class UsersService {
       });
       return `Usuário com ID: ${userId} deletado com sucesso`;
     } catch (error) {
-      handleErrors(error)
+      handleErrors(error);
     }
   }
 
   async getUserForAuth(filter: Prisma.UserWhereUniqueInput) {
     return await this.prismaService.user.findUnique({
       where: filter,
-    })
-
+    });
   }
 }

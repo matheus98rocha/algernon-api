@@ -18,6 +18,8 @@ model User {
   email    String @unique
   password String
   books    Book[]
+  name     String @default("")
+  lastName String @default("")
 }
 
 model Book {
