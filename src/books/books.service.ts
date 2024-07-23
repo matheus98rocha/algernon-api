@@ -43,7 +43,9 @@ export class BooksService {
   }
 
   remove(id: number, userId: number) {
-    return this.prismaService.book.deleteMany();
+    return this.prismaService.book.delete({
+      where: { id, AND: { userId } },
+    });
   }
 
   async getBookFromGoogleApi(bookName: string): Promise<any> {
