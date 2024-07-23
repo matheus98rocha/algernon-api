@@ -6,15 +6,17 @@ import { Logger } from 'nestjs-pino';
 import cookieParser from 'cookie-parser';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useLogger(app.get(Logger))
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true
-  }));
+  app.enableCors();
+  app.useLogger(app.get(Logger));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
 
-  app.use(cookieParser())  
+  app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(app.get(ConfigService).getOrThrow('PORT'));
 }

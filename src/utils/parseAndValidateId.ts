@@ -1,4 +1,4 @@
-import { UnprocessableEntityException } from "@nestjs/common";
+import { UnprocessableEntityException } from '@nestjs/common';
 
 export function parseAndValidateId(userId: string): number {
   const parsedId = parseInt(userId, 10);

@@ -1,15 +1,24 @@
-import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
-import { parseAndValidateId } from 'src/utils/parseAndValidateId';
+import { parseAndValidateId } from '../utils/parseAndValidateId';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwrAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { TokenPayload } from 'src/auth/interfaces/token-payload.interface';
+import { JwrAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { TokenPayload } from '../auth/interfaces/token-payload.interface';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) { }
+  constructor(private readonly userService: UsersService) {}
 
   @Post()
   createUser(@Body() request: CreateUserDto) {
@@ -28,7 +37,10 @@ export class UsersController {
   }
 
   @Patch('by-id/:userID')
-  updateUser(@Param() params: { userID: string }, @Body() request: UpdateUserDto) {
+  updateUser(
+    @Param() params: { userID: string },
+    @Body() request: UpdateUserDto,
+  ) {
     const userId = parseAndValidateId(params.userID);
     return this.userService.updateUserById(userId, request);
   }

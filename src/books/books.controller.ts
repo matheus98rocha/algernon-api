@@ -15,7 +15,6 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TokenPayload } from '../auth/interfaces/token-payload.interface';
 import { CreateBookDto } from './dto/create-books.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
-import { firstValueFrom } from 'rxjs';
 
 @Controller('books')
 export class BooksController {
@@ -61,9 +60,9 @@ export class BooksController {
   }
 
   @UseGuards(JwrAuthGuard)
-  @Get("googleBookApi")
+  @Get('googleBookApi')
   async getBookFromGoogle(@Query('name') name: string) {
     const response = await this.booksService.getBookFromGoogleApi(name);
-    return response; 
+    return response;
   }
 }

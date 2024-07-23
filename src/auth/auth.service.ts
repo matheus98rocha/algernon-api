@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt'
 import { User } from '@prisma/client';
 import { Response } from 'express';
@@ -7,7 +7,7 @@ import ms from 'ms'
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from './interfaces/token-payload.interface';
 import { JwtService } from '@nestjs/jwt';
-import { handleErrors } from 'src/utils/handleErrors';
+import { handleErrors } from '../utils/handleErrors';
 
 @Injectable()
 export class AuthService {
