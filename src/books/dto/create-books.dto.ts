@@ -1,15 +1,25 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+
+const statusOptions = ['wantToRead', 'alreadyRead', 'reading'] as const;
+export type StatusOptions = (typeof statusOptions)[number];
 
 export class CreateBookDto {
   @IsString()
   @IsNotEmpty()
   book: string;
-  
+
   @IsString()
   @IsNotEmpty()
-  description: string
-  
+  description: string;
+
   @IsString()
   @IsNotEmpty()
-  author: string
+  author: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsIn(statusOptions, {
+    message: `Status must be one of the following values: ${statusOptions.join(', ')}`,
+  })
+  status: StatusOptions;
 }

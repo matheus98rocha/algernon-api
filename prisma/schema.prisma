@@ -29,4 +29,5 @@ model Book {
   author      String
   user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
+  status      String @default("wantToRead")
 }
