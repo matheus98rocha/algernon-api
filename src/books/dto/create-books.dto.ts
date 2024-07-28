@@ -1,6 +1,12 @@
 import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 
-const statusOptions = ['wantToRead', 'alreadyRead', 'reading'] as const;
+const statusOptions = [
+  'wantToRead',
+  'alreadyRead',
+  'reading',
+  'abandoned',
+  'rereading',
+] as const;
 export type StatusOptions = (typeof statusOptions)[number];
 
 export class CreateBookDto {
