@@ -31,8 +31,8 @@ export class BooksController {
 
   @Get()
   @UseGuards(JwrAuthGuard)
-  findAll(@CurrentUser() user: TokenPayload) {
-    return this.booksService.findAll(user.userId);
+  findAll(@CurrentUser() user: TokenPayload, @Query('status') status?: string) {
+    return this.booksService.findAll(user.userId, status);
   }
 
   @UseGuards(JwrAuthGuard)

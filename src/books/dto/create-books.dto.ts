@@ -1,6 +1,6 @@
 import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 
-const statusOptions = [
+export const statusOptions = [
   'wantToRead',
   'alreadyRead',
   'reading',

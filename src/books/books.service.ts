@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateBookDto } from './dto/create-books.dto';
+import { CreateBookDto, statusOptions } from './dto/create-books.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { handleErrors } from 'src/utils/handleErrors';
 
 @Injectable()
 export class BooksService {
@@ -20,10 +21,23 @@ export class BooksService {
     });
   }
 
-  async findAll(userId: number) {
-    return await this.prismaService.book.findMany({
-      where: { userId },
-    });
+  async findAll(userId: number, status?: string) {
+    try {
+      const whereClause: any = { userId };
+
+      if (status) {
+        if (!statusOptions.includes(status as (typeof statusOptions)[number])) {
+          throw new Error('Invalid status');
+        }
+        whereClause.status = status;
+      }
+
+      return await this.prismaService.book.findMany({
+        where: whereClause,
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
   }
 
   async findOne(id: number, userId: number) {
