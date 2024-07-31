@@ -30,5 +30,4 @@ model Book {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   status      String   @default("wantToRead")
-  createdAt   DateTime @default(now())
 }
