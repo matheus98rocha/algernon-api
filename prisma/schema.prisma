@@ -20,6 +20,7 @@ model User {
   books    Book[] @relation()
   name     String @default("")
   lastName String @default("")
+  createdAt   DateTime @default(now())
 }
 
 model Book {
@@ -30,4 +31,5 @@ model Book {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   status      String   @default("wantToRead")
+  createdAt   DateTime @default(now())
 }
