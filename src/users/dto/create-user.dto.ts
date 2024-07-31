@@ -1,16 +1,11 @@
-import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
+import { IsCustomStrongPassword } from '../decorators/custom-strong-password';
 
 export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 1,
-    minNumbers: 1,
-    minSymbols: 1,
-    minUppercase: 1,
-  })
+  @IsCustomStrongPassword()
   password: string;
 
   @IsString({ message: 'Nome é obrigatório' })
