@@ -23,11 +23,12 @@ model User {
 }
 
 model Book {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   book        String
   description String
   author      String
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
-  status      String @default("wantToRead")
+  status      String   @default("wantToRead")
+  createdAt   DateTime @default(now())
 }
