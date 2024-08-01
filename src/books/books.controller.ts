@@ -15,6 +15,10 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TokenPayload } from '../auth/interfaces/token-payload.interface';
 import { CreateBookDto } from './dto/create-books.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
+import {
+  Pagination,
+  PaginationParams,
+} from 'src/decorators/pagination.decorator';
 
 @Controller('books')
 export class BooksController {
@@ -31,8 +35,12 @@ export class BooksController {
 
   @Get()
   @UseGuards(JwrAuthGuard)
-  findAll(@CurrentUser() user: TokenPayload, @Query('status') status?: string) {
-    return this.booksService.findAll(user.userId, status);
+  findAll(
+    @CurrentUser() user: TokenPayload,
+    @PaginationParams() paginationParams: Pagination,
+    @Query('status') status?: string,
+  ) {
+    return this.booksService.findAll(user.userId, paginationParams, status);
   }
 
   @UseGuards(JwrAuthGuard)

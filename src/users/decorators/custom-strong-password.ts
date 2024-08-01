@@ -27,7 +27,7 @@ export function IsCustomStrongPassword(validationOptions?: ValidationOptions) {
           );
         },
         defaultMessage(args: ValidationArguments) {
-          return 'A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.';
+          return 'A senha não é forte o suficiente.';
         },
       },
     });

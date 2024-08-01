@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { handleErrors } from 'src/utils/handleErrors';
+import { Pagination } from 'src/decorators/pagination.decorator';
 
 @Injectable()
 export class BooksService {
@@ -21,8 +22,13 @@ export class BooksService {
     });
   }
 
-  async findAll(userId: number, status?: string) {
+  async findAll(
+    userId: number,
+    { page, limit, offset }: Pagination,
+    status?: string,
+  ) {
     try {
+      console.log(offset);
       const whereClause: any = { userId };
 
       if (status) {
@@ -32,14 +38,31 @@ export class BooksService {
         whereClause.status = status;
       }
 
-      return await this.prismaService.book.findMany({
+      const books = await this.prismaService.book.findMany({
+        where: whereClause,
+        skip: offset,
+        take: limit,
+      });
+
+      const totalItems = await this.prismaService.book.count({
         where: whereClause,
       });
+
+      const totalPages = Math.ceil(totalItems / limit);
+
+      return {
+        data: books,
+        pagination: {
+          page,
+          limit,
+          totalItems,
+          totalPages,
+        },
+      };
     } catch (error) {
       handleErrors(error);
     }
   }
-
   async findOne(id: number, userId: number) {
     return await this.prismaService.book.findUniqueOrThrow({
       where: { id, AND: { userId } },
