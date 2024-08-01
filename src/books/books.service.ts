@@ -4,8 +4,8 @@ import { UpdateBookDto } from './dto/update-books.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { handleErrors } from 'src/utils/handleErrors';
-import { Pagination } from 'src/decorators/pagination.decorator';
+import { handleErrors } from '../utils/handleErrors';
+import { Pagination } from '../decorators/pagination.decorator';
 
 @Injectable()
 export class BooksService {
@@ -28,7 +28,6 @@ export class BooksService {
     status?: string,
   ) {
     try {
-      console.log(offset);
       const whereClause: any = { userId };
 
       if (status) {

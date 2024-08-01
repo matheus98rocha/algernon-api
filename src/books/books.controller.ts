@@ -18,7 +18,7 @@ import { UpdateBookDto } from './dto/update-books.dto';
 import {
   Pagination,
   PaginationParams,
-} from 'src/decorators/pagination.decorator';
+} from '../decorators/pagination.decorator';
 
 @Controller('books')
 export class BooksController {
