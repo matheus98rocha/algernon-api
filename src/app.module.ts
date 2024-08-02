@@ -12,27 +12,35 @@ import { BooksModule } from './books/books.module';
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const isProduction = configService.get('NODE_ENV') === "production";
+        const isProduction = configService.get('NODE_ENV') === 'production';
 
         return {
           pinoHttp: {
-            transport: isProduction ? undefined : {
-              target: "pino-pretty",
-              options: {
-                singleLine: true
-              }
-            },
-            level: isProduction ? 'info' : 'debug'
-          }
-        }
+            transport: isProduction
+              ? undefined
+              : {
+                  target: 'pino-pretty',
+                  options: {
+                    singleLine: true,
+                  },
+                },
+            level: isProduction ? 'info' : 'debug',
+          },
+        };
       },
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
-    ConfigModule.forRoot(), UsersModule, AuthModule, BooksModule],
+    ConfigModule.forRoot(),
+    UsersModule,
+    AuthModule,
+    BooksModule,
+  ],
   controllers: [],
-  providers: [    {
-    provide: APP_FILTER,
-    useClass: HttpExceptionFilter,
-  },],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -6,12 +6,14 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { handleErrors } from '../utils/handleErrors';
 import { Pagination } from '../decorators/pagination.decorator';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class BooksService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
   ) {}
   async create(createBookDto: CreateBookDto, userId: number) {
     return await this.prismaService.book.create({
@@ -85,21 +87,28 @@ export class BooksService {
   }
 
   async getBookFromGoogleApi(bookName: string): Promise<any> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(bookName)}`;
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(bookName)}&key=${this.configService.getOrThrow<string>('GOOGLE_API_KEY')}`;
     const response = await firstValueFrom(this.httpService.get(url));
     const items = response.data.items;
-    if (items && items.length === 0) {
+
+    if (!items || items.length === 0) {
       throw new NotFoundException('No books found');
     } else {
-      const volumeInfo = items[0].volumeInfo;
-      return {
-        title: volumeInfo.title,
-        authors: volumeInfo.authors ? volumeInfo.authors[0] : 'Unknown',
-        description: volumeInfo.description,
-        bookImage: volumeInfo.imageLinks
-          ? volumeInfo.imageLinks.thumbnail
-          : 'No image available',
-      };
+      const formattedItems = items.map((item) => {
+        const volumeInfo = item.volumeInfo;
+        return {
+          title: volumeInfo.title,
+          authors: volumeInfo.authors
+            ? volumeInfo.authors.join(', ')
+            : 'Unknown',
+          description: volumeInfo.description,
+          bookImage: volumeInfo.imageLinks
+            ? volumeInfo.imageLinks.thumbnail
+            : 'No image available',
+        };
+      });
+
+      return formattedItems;
     }
   }
 }
