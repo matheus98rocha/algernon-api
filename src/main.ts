@@ -6,7 +6,6 @@ import { Logger } from 'nestjs-pino';
 import cookieParser from 'cookie-parser';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import helmet from 'helmet';
-import csurf from 'csurf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
