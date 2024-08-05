@@ -23,7 +23,6 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.use(csurf({ cookie: true }));
   await app.listen(app.get(ConfigService).getOrThrow('PORT'));
 }
 bootstrap();
