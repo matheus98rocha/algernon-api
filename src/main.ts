@@ -11,7 +11,7 @@ import csurf from 'csurf';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['algernon-apial.vercel.app'],
+    origin: ['https://algernon-ui.vercel.app/'],
   });
   app.use(helmet());
   app.useLogger(app.get(Logger));
