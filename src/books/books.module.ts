@@ -9,6 +9,5 @@ import { ConfigModule } from '@nestjs/config';
   imports: [PrismaModule, HttpModule, ConfigModule],
   controllers: [BooksController],
   providers: [BooksService],
-  
 })
 export class BooksModule {}

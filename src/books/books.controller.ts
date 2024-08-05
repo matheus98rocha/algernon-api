@@ -39,8 +39,14 @@ export class BooksController {
     @CurrentUser() user: TokenPayload,
     @PaginationParams() paginationParams: Pagination,
     @Query('status') status?: string,
+    @Query('bookName') bookName?: string,
   ) {
-    return this.booksService.findAll(user.userId, paginationParams, status);
+    return this.booksService.findAll(
+      user.userId,
+      paginationParams,
+      status,
+      bookName,
+    );
   }
 
   @UseGuards(JwrAuthGuard)

@@ -8,6 +8,11 @@ import { handleErrors } from '../utils/handleErrors';
 import { Pagination } from '../decorators/pagination.decorator';
 import { ConfigService } from '@nestjs/config';
 
+import {
+  buildWhereClause,
+  WhereClauseType,
+} from './helpers/where-clause.helper';
+
 @Injectable()
 export class BooksService {
   constructor(
@@ -28,16 +33,21 @@ export class BooksService {
     userId: number,
     { page, limit, offset }: Pagination,
     status?: string,
+    bookName?: string,
   ) {
     try {
-      const whereClause: any = { userId };
-
-      if (status) {
-        if (!statusOptions.includes(status as (typeof statusOptions)[number])) {
-          throw new Error('Invalid status');
-        }
-        whereClause.status = status;
+      if (
+        status &&
+        !statusOptions.includes(status as (typeof statusOptions)[number])
+      ) {
+        throw new Error('Invalid status');
       }
+
+      const whereClause: WhereClauseType = buildWhereClause(
+        userId,
+        status,
+        bookName,
+      );
 
       const books = await this.prismaService.book.findMany({
         where: whereClause,
@@ -64,6 +74,7 @@ export class BooksService {
       handleErrors(error);
     }
   }
+
   async findOne(id: number, userId: number) {
     return await this.prismaService.book.findUniqueOrThrow({
       where: { id, AND: { userId } },
