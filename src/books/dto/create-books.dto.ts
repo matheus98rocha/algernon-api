@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export const statusOptions = [
   'wantToRead',
@@ -28,4 +28,8 @@ export class CreateBookDto {
     message: `Status must be one of the following values: ${statusOptions.join(', ')}`,
   })
   status: StatusOptions;
+
+  @IsBoolean()
+  @IsOptional()
+  isFavorite: boolean;
 }

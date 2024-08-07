@@ -50,15 +50,15 @@ export class BooksController {
   }
 
   @UseGuards(JwrAuthGuard)
-  @Get('by-id/:id')
+  @Get('bookById/:id')
   findOne(@Param('id') id: string, @CurrentUser() user: TokenPayload) {
     return this.booksService.findOne(+id, user.userId);
   }
 
   @UseGuards(JwrAuthGuard)
-  @Patch('by-id/:id')
+  @Patch('updateBook/:id')
   update(
-    @Param('by-id/:id') id: string,
+    @Param('id') id: string,
     @Body() updateBookDto: UpdateBookDto,
     @CurrentUser() user: TokenPayload,
   ) {
