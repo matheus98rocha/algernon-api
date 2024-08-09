@@ -64,7 +64,6 @@ export class BooksController {
     @Body() updateBookDto: UpdateBookDto,
     @CurrentUser() user: TokenPayload,
   ) {
-    // TODO: Not working yet
     return this.booksService.update(+id, updateBookDto, user.userId);
   }
 
