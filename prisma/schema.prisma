@@ -32,5 +32,6 @@ model Book {
   userId      Int
   status      String   @default("wantToRead")
   isFavorite  Boolean  @default(false)
+  imageUrl    String   @default("")
   createdAt   DateTime @default(now())
 }

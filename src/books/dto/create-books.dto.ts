@@ -1,4 +1,10 @@
-import { IsBoolean, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export const statusOptions = [
   'wantToRead',
@@ -32,4 +38,7 @@ export class CreateBookDto {
   @IsBoolean()
   @IsOptional()
   isFavorite: boolean;
+
+  @IsString()
+  imageUrl: string;
 }

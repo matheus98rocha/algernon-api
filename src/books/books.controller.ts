@@ -40,12 +40,14 @@ export class BooksController {
     @PaginationParams() paginationParams: Pagination,
     @Query('status') status?: string,
     @Query('bookName') bookName?: string,
+    @Query('isFavorite') isFavorite?: boolean,
   ) {
     return this.booksService.findAll(
       user.userId,
       paginationParams,
       status,
       bookName,
+      isFavorite,
     );
   }
 

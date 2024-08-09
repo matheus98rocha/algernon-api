@@ -34,6 +34,7 @@ export class BooksService {
     { page, limit, offset }: Pagination,
     status?: string,
     bookName?: string,
+    isFavorite?: boolean,
   ) {
     try {
       if (
@@ -47,8 +48,8 @@ export class BooksService {
         userId,
         status,
         bookName,
+        isFavorite,
       );
-
       const books = await this.prismaService.book.findMany({
         where: whereClause,
         skip: offset,
@@ -71,6 +72,7 @@ export class BooksService {
         },
       };
     } catch (error) {
+      console.log("error", error)
       handleErrors(error);
     }
   }
