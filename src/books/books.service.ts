@@ -12,6 +12,7 @@ import {
   buildWhereClause,
   WhereClauseType,
 } from './helpers/where-clause.helper';
+import { GoogleBooksApiResponse } from '../types/google-books-api';
 
 @Injectable()
 export class BooksService {
@@ -72,7 +73,7 @@ export class BooksService {
         },
       };
     } catch (error) {
-      console.log("error", error)
+      console.log('error', error);
       handleErrors(error);
     }
   }
@@ -98,8 +99,9 @@ export class BooksService {
       where: { id, AND: { userId } },
     });
   }
-
-  async getBookFromGoogleApi(bookName: string): Promise<any> {
+  async getBookFromGoogleApi(
+    bookName: string,
+  ): Promise<GoogleBooksApiResponse[]> {
     const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(bookName)}&key=${this.configService.getOrThrow<string>('GOOGLE_API_KEY')}`;
     const response = await firstValueFrom(this.httpService.get(url));
     const items = response.data.items;
@@ -109,15 +111,19 @@ export class BooksService {
     } else {
       const formattedItems = items.map((item) => {
         const volumeInfo = item.volumeInfo;
+        const imageLinks = volumeInfo.imageLinks;
+        const bookImage =
+          imageLinks?.smallThumbnail ||
+          imageLinks?.thumbnail ||
+          'No image available';
+
         return {
           title: volumeInfo.title,
           authors: volumeInfo.authors
             ? volumeInfo.authors.join(', ')
             : 'Unknown',
           description: volumeInfo.description,
-          bookImage: volumeInfo.imageLinks
-            ? volumeInfo.imageLinks.thumbnail
-            : 'No image available',
+          bookImage: bookImage,
         };
       });
 

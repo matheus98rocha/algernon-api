@@ -68,7 +68,7 @@ export class BooksController {
   }
 
   @UseGuards(JwrAuthGuard)
-  @Delete('by-id/:id')
+  @Delete('delete-book/:id')
   remove(@Param('id') id: string, @CurrentUser() user: TokenPayload) {
     // TODO: Not working yet
     return this.booksService.remove(+id, user.userId);
