@@ -16,6 +16,10 @@ export function handleErrors(error: any, message?: string) {
     );
   }
 
+  if (error.status === 404 || error.code === 'P2025') {
+    throw new NotFoundException(message || 'Registro não encontrado.');
+  }
+
   if (error.status === 404) {
     throw new NotFoundException(
       'Algo deu errado... Tente novamente mais tarde.',

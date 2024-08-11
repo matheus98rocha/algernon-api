@@ -52,7 +52,7 @@ export class BooksController {
   }
 
   @UseGuards(JwrAuthGuard)
-  @Get('bookById/:id')
+  @Get('get-by-id/:id')
   findOne(@Param('id') id: string, @CurrentUser() user: TokenPayload) {
     return this.booksService.findOne(+id, user.userId);
   }
@@ -70,7 +70,6 @@ export class BooksController {
   @UseGuards(JwrAuthGuard)
   @Delete('delete-book/:id')
   remove(@Param('id') id: string, @CurrentUser() user: TokenPayload) {
-    // TODO: Not working yet
     return this.booksService.remove(+id, user.userId);
   }
 

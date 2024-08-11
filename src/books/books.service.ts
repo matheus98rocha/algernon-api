@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateBookDto, statusOptions } from './dto/create-books.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -13,6 +18,7 @@ import {
   WhereClauseType,
 } from './helpers/where-clause.helper';
 import { GoogleBooksApiResponse } from '../types/google-books-api';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class BooksService {
@@ -87,36 +93,50 @@ export class BooksService {
         },
       };
     } catch (error) {
-      console.log('error', error);
       handleErrors(error);
     }
   }
 
   async findOne(id: number, userId: number) {
-    return await this.prismaService.book.findUniqueOrThrow({
-      where: { id, AND: { userId } },
-    });
+    try {
+      return await this.prismaService.book.findUniqueOrThrow({
+        where: { id, AND: { userId } },
+      });
+    } catch (error) {
+      handleErrors(error, 'Livro não encontrado');
+    }
   }
 
   async update(id: number, updateBookDto: UpdateBookDto, userId: number) {
-    return await this.prismaService.book.update({
-      data: {
-        ...updateBookDto,
-        userId,
-      },
-      where: { id, AND: { userId } },
-    });
+    try {
+      return await this.prismaService.book.update({
+        data: {
+          ...updateBookDto,
+          userId,
+        },
+        where: { id, AND: { userId } },
+      });
+    } catch (error) {
+      handleErrors(error, 'Livro não encontrado para atualização');
+    }
   }
 
-  remove(id: number, userId: number) {
-    return this.prismaService.book.delete({
-      where: { id, AND: { userId } },
-    });
+  async remove(id: number, userId: number) {
+    try {
+      const deletedBook = await this.prismaService.book.delete({
+        where: { id, AND: { userId } },
+      });
+      return deletedBook;
+    } catch (error) {
+      handleErrors(error, 'Livro não encontrado para exclusão');
+    }
   }
+
   async getBookFromGoogleApi(
     bookName: string,
   ): Promise<GoogleBooksApiResponse[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(bookName)}&key=${this.configService.getOrThrow<string>('GOOGLE_API_KEY')}&lang=pt-BR`;    const response = await firstValueFrom(this.httpService.get(url));
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(bookName)}&key=${this.configService.getOrThrow<string>('GOOGLE_API_KEY')}&lang=pt-BR`;
+    const response = await firstValueFrom(this.httpService.get(url));
     const items = response.data.items;
 
     if (!items || items.length === 0) {
