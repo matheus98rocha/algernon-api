@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateBookDto, statusOptions } from './dto/create-books.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -22,12 +22,26 @@ export class BooksService {
     private readonly configService: ConfigService,
   ) {}
   async create(createBookDto: CreateBookDto, userId: number) {
-    return await this.prismaService.book.create({
-      data: {
-        ...createBookDto,
-        userId,
-      },
-    });
+    try {
+      const book = await this.prismaService.book.findFirst({
+        where: {
+          book: createBookDto.book,
+          userId,
+        },
+      });
+      if (book) {
+        // Preciso que nesse momento a função entro no if da handle erro
+        throw new ConflictException('Você já cadastrou esse livro.');
+      }
+      return await this.prismaService.book.create({
+        data: {
+          ...createBookDto,
+          userId,
+        },
+      });
+    } catch (error) {
+      handleErrors(error);
+    }
   }
 
   async findAll(
