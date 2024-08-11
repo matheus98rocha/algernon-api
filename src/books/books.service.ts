@@ -116,8 +116,7 @@ export class BooksService {
   async getBookFromGoogleApi(
     bookName: string,
   ): Promise<GoogleBooksApiResponse[]> {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(bookName)}&key=${this.configService.getOrThrow<string>('GOOGLE_API_KEY')}`;
-    const response = await firstValueFrom(this.httpService.get(url));
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(bookName)}&key=${this.configService.getOrThrow<string>('GOOGLE_API_KEY')}&lang=pt-BR`;    const response = await firstValueFrom(this.httpService.get(url));
     const items = response.data.items;
 
     if (!items || items.length === 0) {
