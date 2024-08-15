@@ -19,6 +19,7 @@ import {
   Pagination,
   PaginationParams,
 } from '../decorators/pagination.decorator';
+import { orderByOptions } from './helpers/order-by.helper';
 
 @Controller('books')
 export class BooksController {
@@ -41,6 +42,7 @@ export class BooksController {
     @Query('status') status?: string,
     @Query('bookName') bookName?: string,
     @Query('isFavorite') isFavorite?: boolean,
+    @Query('orderBy') orderBy?: orderByOptions,
   ) {
     return this.booksService.findAll(
       user.userId,
@@ -48,6 +50,7 @@ export class BooksController {
       status,
       bookName,
       isFavorite,
+      orderBy,
     );
   }
 

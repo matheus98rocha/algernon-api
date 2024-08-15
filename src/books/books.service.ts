@@ -18,7 +18,7 @@ import {
   WhereClauseType,
 } from './helpers/where-clause.helper';
 import { GoogleBooksApiResponse } from '../types/google-books-api';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { buildOrderClause, orderByOptions } from './helpers/order-by.helper';
 
 @Injectable()
 export class BooksService {
@@ -56,6 +56,7 @@ export class BooksService {
     status?: string,
     bookName?: string,
     isFavorite?: boolean,
+    orderBy?: orderByOptions,
   ) {
     try {
       if (
@@ -71,10 +72,14 @@ export class BooksService {
         bookName,
         isFavorite,
       );
+
+      const orderClause = buildOrderClause(orderBy);
+
       const books = await this.prismaService.book.findMany({
         where: whereClause,
         skip: offset,
         take: limit,
+        orderBy: orderClause,
       });
 
       const totalItems = await this.prismaService.book.count({
