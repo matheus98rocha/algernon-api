@@ -2,8 +2,11 @@ import {
   IsBoolean,
   IsIn,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
 } from 'class-validator';
 
 export const statusOptions = [
@@ -41,4 +44,10 @@ export class CreateBookDto {
 
   @IsString()
   imageUrl: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  @Max(5)
+  rate: number;
 }
