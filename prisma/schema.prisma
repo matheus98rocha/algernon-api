@@ -20,6 +20,7 @@ model User {
   books     Book[]   @relation()
   name      String   @default("")
   lastName  String   @default("")
+  avatar    Int      @default(0)
   createdAt DateTime @default(now())
 }
 

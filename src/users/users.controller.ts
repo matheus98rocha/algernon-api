@@ -37,12 +37,15 @@ export class UsersController {
   }
 
   @Patch('by-id/:userID')
-  updateUser(
-    @Param() params: { userID: string },
-    @Body() request: UpdateUserDto,
-  ) {
+  updateUser(@Param() params: { userID: string }, @Body() data: UpdateUserDto) {
     const userId = parseAndValidateId(params.userID);
-    return this.userService.updateUserById(userId, request);
+    return this.userService.updateUserById(userId, data);
+  }
+  
+  @UseGuards(JwrAuthGuard)
+  @Patch('update-avatar')
+  updateUserAvatar(@CurrentUser() user: TokenPayload, @Body() { avatar }: { avatar: number }) {
+    return this.userService.updateUserAvatar(user.userId, avatar);
   }
 
   // TODO: Error quando tem apenas um usuário cadastrado

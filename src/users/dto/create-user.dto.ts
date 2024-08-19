@@ -1,4 +1,4 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 import { IsCustomStrongPassword } from '../decorators/custom-strong-password';
 
 export class CreateUserDto {
@@ -13,4 +13,8 @@ export class CreateUserDto {
 
   @IsString({ message: 'Sobrenome é obrigatório' })
   lastName: string;
+
+  @IsNumber()
+  @IsOptional()
+  avatar: number;
 }

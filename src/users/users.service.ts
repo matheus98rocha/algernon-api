@@ -15,6 +15,7 @@ export class UsersService {
     email: true,
     name: true,
     lastName: true,
+    avatar: true,
   };
 
   async createUser(data: CreateUserDto): Promise<Partial<User>> {
@@ -67,6 +68,32 @@ export class UsersService {
         data: {
           ...data,
           password: await bcrypt.hash(data.password, 10),
+        },
+      });
+      if (!user) {
+        throw new UnprocessableEntityException(
+          `Usuário com ID: ${userId} não encontrado`,
+        );
+      }
+      return user;
+    } catch (error) {
+      handleErrors(error);
+    }
+  }
+
+  async updateUserAvatar(
+    userId: number,
+    avatar: number,
+  ): Promise<Partial<User>> {
+    try {
+      const findUser = await this.prismaService.user.findUnique({
+        where: { id: userId },
+      });
+      const user = await this.prismaService.user.update({
+        where: { id: userId },
+        data: {
+          ...findUser,
+          avatar: avatar,
         },
       });
       if (!user) {
