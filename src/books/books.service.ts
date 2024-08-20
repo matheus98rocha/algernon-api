@@ -2,7 +2,6 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateBookDto, statusOptions } from './dto/create-books.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
@@ -168,4 +167,4 @@ export class BooksService {
       return formattedItems;
     }
   }
-}
+};
