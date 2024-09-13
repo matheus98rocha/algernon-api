@@ -41,10 +41,13 @@ export class UsersController {
     const userId = parseAndValidateId(params.userID);
     return this.userService.updateUserById(userId, data);
   }
-  
+
   @UseGuards(JwrAuthGuard)
   @Patch('update-avatar')
-  updateUserAvatar(@CurrentUser() user: TokenPayload, @Body() { avatar }: { avatar: number }) {
+  updateUserAvatar(
+    @CurrentUser() user: TokenPayload,
+    @Body() { avatar }: { avatar: number },
+  ) {
     return this.userService.updateUserAvatar(user.userId, avatar);
   }
 

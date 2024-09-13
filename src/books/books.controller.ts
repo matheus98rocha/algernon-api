@@ -13,8 +13,8 @@ import { BooksService } from './books.service';
 import { JwrAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TokenPayload } from '../auth/interfaces/token-payload.interface';
-import { CreateBookDto } from './dto/create-books.dto';
-import { UpdateBookDto } from './dto/update-books.dto';
+import { CreateBookDto, StatusOptions } from './dto/create-books.dto';
+import { BookStatusBody, UpdateBookDto } from './dto/update-books.dto';
 import {
   Pagination,
   PaginationParams,
@@ -68,6 +68,16 @@ export class BooksController {
     @CurrentUser() user: TokenPayload,
   ) {
     return this.booksService.update(+id, updateBookDto, user.userId);
+  }
+
+  @UseGuards(JwrAuthGuard)
+  @Patch('updateBookStatus/:id')
+  updateStatusBook(
+    @Param('id') id: string,
+    @Body() status: BookStatusBody,
+    @CurrentUser() user: TokenPayload,
+  ) {
+    return this.booksService.updateStatusBook(+id, status, user.userId);
   }
 
   @UseGuards(JwrAuthGuard)

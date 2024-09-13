@@ -3,8 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateBookDto, statusOptions } from './dto/create-books.dto';
-import { UpdateBookDto } from './dto/update-books.dto';
+import {
+  CreateBookDto,
+  StatusOptions,
+  statusOptions,
+} from './dto/create-books.dto';
+import { BookStatusBody, UpdateBookDto } from './dto/update-books.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -125,6 +129,25 @@ export class BooksService {
     }
   }
 
+  async updateStatusBook(
+    id: number,
+    statusBody: BookStatusBody,
+    userId: number,
+  ) {
+    try {
+      const { status } = statusBody;
+      return await this.prismaService.book.update({
+        data: {
+          status: status,
+          userId,
+        },
+        where: { id, AND: { userId } },
+      });
+    } catch (error) {
+      handleErrors(error, 'Livro não encontrado para atualização');
+    }
+  }
+
   async remove(id: number, userId: number) {
     try {
       const deletedBook = await this.prismaService.book.delete({
@@ -167,4 +190,4 @@ export class BooksService {
       return formattedItems;
     }
   }
-};
+}
