@@ -39,7 +39,6 @@ export class BooksService {
         },
       });
       if (book) {
-        // Preciso que nesse momento a função entro no if da handle erro
         throw new ConflictException('Você já cadastrou esse livro.');
       }
       return await this.prismaService.book.create({
