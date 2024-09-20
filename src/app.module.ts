@@ -24,6 +24,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
                   target: 'pino-pretty',
                   options: {
                     singleLine: true,
+                    colorize: true, // Adiciona cores ao log para ambientes de desenvolvimento
                   },
                 },
             level: isProduction ? 'info' : 'debug',
@@ -32,12 +33,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
       },
       inject: [ConfigService],
     }),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 10,
-      },
-    ]),
     UsersModule,
     AuthModule,
     BooksModule,
