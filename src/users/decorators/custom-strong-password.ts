@@ -1,11 +1,7 @@
-import {
-  registerDecorator,
-  ValidationOptions,
-  ValidationArguments,
-} from 'class-validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 
 export function IsCustomStrongPassword(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isCustomStrongPassword',
       target: object.constructor,
@@ -26,7 +22,7 @@ export function IsCustomStrongPassword(validationOptions?: ValidationOptions) {
             hasSymbols
           );
         },
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage() {
           return 'A senha não é forte o suficiente.';
         },
       },

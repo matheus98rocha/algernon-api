@@ -3,11 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  CreateBookDto,
-  StatusOptions,
-  statusOptions,
-} from './dto/create-books.dto';
+import { CreateBookDto, statusOptions } from './dto/create-books.dto';
 import { BookStatusBody, UpdateBookDto } from './dto/update-books.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';

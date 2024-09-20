@@ -13,7 +13,7 @@ import { BooksService } from './books.service';
 import { JwrAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TokenPayload } from '../auth/interfaces/token-payload.interface';
-import { CreateBookDto, StatusOptions } from './dto/create-books.dto';
+import { CreateBookDto } from './dto/create-books.dto';
 import { BookStatusBody, UpdateBookDto } from './dto/update-books.dto';
 import {
   Pagination,
