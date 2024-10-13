@@ -45,9 +45,6 @@ export class CreateBookDto {
   @IsString()
   imageUrl: string;
 
-  @IsNumber()
   @IsOptional()
-  @Min(0)
-  @Max(5)
   rate: number;
 }
