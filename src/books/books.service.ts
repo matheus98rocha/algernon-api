@@ -34,15 +34,22 @@ export class BooksService {
           userId,
         },
       });
-      if (book) {
+      if (book !== null) {
         throw new ConflictException('Você já cadastrou esse livro.');
       }
+
+      const dataObj = {
+        ...createBookDto,
+        userId,
+        rate: Number(createBookDto.rate),
+      };
+
+      if (createBookDto.status !== 'alreadyRead') {
+        delete dataObj.rate;
+      }
+
       return await this.prismaService.book.create({
-        data: {
-          ...createBookDto,
-          userId,
-          rate: Number(createBookDto.rate),
-        },
+        data: dataObj,
       });
     } catch (error) {
       handleErrors(error);
