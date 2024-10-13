@@ -41,6 +41,7 @@ export class BooksService {
         data: {
           ...createBookDto,
           userId,
+          rate: Number(createBookDto.rate),
         },
       });
     } catch (error) {
